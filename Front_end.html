@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOVA Chatbot</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1c;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            color: white;
+        }
+
+        .main-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .memory-section {
+            width: 20%;
+            background-color: #333;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-section h2 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #2196F3;
+        }
+
+        .memory-item {
+            background-color: #444;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .memory-item:hover {
+            background-color: #555;
+        }
+
+        .faq-section {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: url('/img/images.png');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .faq-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .faq-section h1, .faq-item {
+            position: relative;
+            z-index: 2;
+        }
+
+        .faq-section h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #2196F3;
+        }
+
+        .faq-item {
+            width: 80%;
+            background-color: #333;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 2;
+        }
+
+        .faq-item:hover {
+            background-color: #444;
+        }
+
+        .chat-container {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-image: url('Srmseal.png');
+            background-size: auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: 20px;
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 15px;
+        }
+
+        .header, .chat-box, .input-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 1.5em;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .chat-box {
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: rgba(31, 31, 31, 0.9);
+            border-radius: 0;
+            flex-grow: 1;
+        }
+
+        .chat-box img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .message {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background-color: #2196F3;
+            color: white;
+            border-top-right-radius: 0;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background-color: #333;
+            color: #eee;
+            border-top-left-radius: 0;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #2c2c2c;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #444;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        .input-container button {
+            padding: 10px 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #1e88e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Left Section: Previous Memories -->
+        <div class="memory-section">
+            <h2>Previous Memories</h2>
+            <div class="memory-item">Memory 1: Chat about classes</div>
+            <div class="memory-item">Memory 2: Navigation help</div>
+            <div class="memory-item">Memory 3: Event guide</div>
+        </div>
+
+        <!-- Center Section: Chatbot -->
+        <div class="chat-container">
+            <div class="header">
+                SOVA Chatbot
+            </div>
+            <div class="chat-box" id="chat-box">
+                <div class="bot-message message">Hello! I'm SOVA, your virtual assistant. How can I help you today?</div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="user-input" placeholder="Type your message here...">
+                <button id="send-button">Send</button>
+            </div>
+        </div>
+
+        <!-- Right Section: FAQs -->
+        <div class="faq-section">
+            <h1>Frequently Asked Questions</h1>
+            <div class="faq-item">How can I find my class schedule?</div>
+            <div class="faq-item">Where can I access the course material?</div>
+            <div class="faq-item">How do I register for events?</div>
+            <div class="faq-item">Where can I find the campus map?</div>
+        </div>
+    </div>
+
+    <script>
+        let chatbotData = {};
+
+        async function loadJSONFiles() {
+            const files = [
+                'faculty_data.json',
+                'hostel.json',
+                'output.json',
+                'srm_about_data.json',
+                'srm_admission_engineering_data.json',
+                'srm_admission_india_data.json',
+                'srm_admissions_data.json',
+                'srm_data.json',
+                'srm_departments_data.json',
+                'srm_events_data.json',
+                'srm_ir_data.json',
+                'srm_life_at_data.json',
+                'srm_outward_mobility_data.json',
+                'srm_scholarships_data.json'
+            ]; // Replace with your actual JSON file names
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    Object.assign(chatbotData, data);
+                } catch (error) {
+                    console.error('Error loading JSON file:', error);
+                }
+            }
+            console.log(chatbotData); // Log the loaded data for debugging
+        }
+
+        loadJSONFiles();
+
+        document.getElementById('send-button').addEventListener('click', () => {
+            const userInput = document.getElementById('user-input').value;
+            addMessageToChat(userInput, 'user');
+
+            const botResponse = getBotResponse(userInput.toLowerCase());
+            addMessageToChat(botResponse, 'bot');
+
+            document.getElementById('user-input').value = ''; // Clear the input field
+        });
+
+        function getBotResponse(input) {
+            console.log('User input:', input); // Log user input for debugging
+            const response = chatbotData[input];
+            return response || "I'm sorry, I don't understand.";
+        }
+
+
+
+        function addMessageToChat(message, sender) {
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+            messageElement.textContent = message;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
+        }
+    </script>
+</body>
+</html>
